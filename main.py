@@ -8,7 +8,7 @@ from starlette.requests import Request
 from models.message_request import MessageRequest
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import FollowEvent, UnfollowEvent, MessageEvent, TextMessage, TextSendMessage, ImageMessage
+from linebot.models import FollowEvent, UnfollowEvent, MessageEvent, TextMessage, TextSendMessage, ImageMessage, LocationMessage
 from skills import *
 from skills import skills
 
@@ -84,3 +84,11 @@ def handle_message(event):
     with open(Path(f"images/{message_id}.jpg").absolute(), "wb") as f:
         for chunk in message_content.iter_content():
             f.write(chunk)
+
+
+@handler.add(event=MessageEvent, message=LocationMessage)
+def handle_message(event):
+    print("location", event)
+    print("-----")
+    print(event.message.latitude)
+    print(event.message.longitude)
