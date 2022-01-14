@@ -1,4 +1,3 @@
-from typing import Text
 from linebot.models import TextSendMessage
 from models.message_request import MessageRequest
 from skills import add_skill
