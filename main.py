@@ -1,5 +1,6 @@
 import os
 import re
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from fastapi.params import Header
@@ -7,7 +8,7 @@ from starlette.requests import Request
 from models.message_request import MessageRequest
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import FollowEvent, UnfollowEvent, MessageEvent, TextMessage, TextSendMessage
+from linebot.models import FollowEvent, UnfollowEvent, MessageEvent, TextMessage, TextSendMessage, ImageMessage
 from skills import *
 from skills import skills
 
@@ -70,3 +71,16 @@ def handle_message(event):
 
     func = get_message(msg_request)
     line_bot_api.reply_message(event.reply_token, func)
+
+
+@handler.add(event=MessageEvent, message=ImageMessage)
+def handle_message(event):
+    print("image", event)
+    # 取得訊息ID
+    message_id = event.message.id
+    # 透過訊息ID取得LINE Server上面的檔案
+    message_content = line_bot_api.get_message_content(message_id)
+    # 將圖片存到伺服器
+    with open(Path(f"images/{message_id}.jpg").absolute(), "wb") as f:
+        for chunk in message_content.iter_content():
+            f.write(chunk)
