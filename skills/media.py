@@ -1,4 +1,4 @@
-from linebot.models import TextSendMessage, AudioSendMessage, VideoSendMessage
+from linebot.models import AudioSendMessage, VideoSendMessage
 from models.message_request import MessageRequest
 from skills import add_skill
 
