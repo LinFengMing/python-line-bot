@@ -8,7 +8,16 @@ from starlette.requests import Request
 from models.message_request import MessageRequest
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import FollowEvent, UnfollowEvent, MessageEvent, TextMessage, TextSendMessage, ImageMessage, LocationMessage
+from linebot.models import (
+    FollowEvent,
+    UnfollowEvent,
+    MessageEvent,
+    PostbackEvent,
+    TextMessage,
+    TextSendMessage,
+    ImageMessage,
+    LocationMessage,
+)
 from skills import *
 from skills import skills
 
@@ -54,7 +63,8 @@ def handle_message(event):
 
     # 回傳歡迎訊息
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(f"Hi, {profile.display_name}"))
+        event.reply_token, TextSendMessage(f"Hi, {profile.display_name}")
+    )
 
 
 @handler.add(event=UnfollowEvent)
@@ -92,3 +102,11 @@ def handle_message(event):
     print("-----")
     print(event.message.latitude)
     print(event.message.longitude)
+
+
+@handler.add(event=PostbackEvent)
+def handle_message(event):
+    print("postback", event.postback)
+    print("-----")
+    print("params", event.postback.params)
+    print("data", event.postback.data)
